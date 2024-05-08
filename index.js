@@ -3,7 +3,7 @@ const express = require('express')
 const app = express()
 const cors = require('cors') 
 const morgan = require('morgan')
-morgan.token('body', (request, response) => JSON.stringify(request.body)) 
+morgan.token('body', (request) => JSON.stringify(request.body)) 
 
 const Person = require('./models/person')
 
@@ -54,8 +54,7 @@ app.get('/api/persons', (request, response) => {
 
 // SEARCH ID
 app.get('/api/persons/:id', (request, response, next) => {
-    const body = request.body
-    Person.findById(request.params.id).then(person => {
+    Person.findById(request.params.id).then( person => {
         if (person) {
             response.json(person)
         } else {
@@ -93,8 +92,8 @@ app.post('/api/persons', (request, response, next) => {
 })
 
 // DELETE
-app.delete('/api/persons/:id', (request, response) => {
-    Person.findByIdAndDelete(request.params.id).then(result => {
+app.delete('/api/persons/:id', (request, response, next) => {
+    Person.findByIdAndDelete(request.params.id).then( result => {
         response.status(204).end()
     })
     .catch(error => next(error))
